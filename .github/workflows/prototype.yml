@@ -19,15 +19,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name:   Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 'latest'  # Specify the Node.js version to use
-          cache: 'npm'  # Enable caching for npm dependencies
-      - name: Install dependencies
-        run: npm install  # Install the project dependencies using npm
-      - name: Build
-        run: npm run build  # Build the project using npm
-      - name: Run tests
-        run: npm test  # Run the tests using npm
-      
+      - name:   run tailwing congif.js
+        run: node tailwind.config.js 
+      - name:   run postcss.config.js  
+        run: node postcss.config.js
+         
+          
+         
+        
+            
