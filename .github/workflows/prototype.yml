@@ -39,10 +39,7 @@ jobs:
       - name: Run tests
         run: npm test -- --watchAll=false --passWithNoTests --ci=true --detectOpenHandles=true --forceExit=true --maxWorkers=2 --testTimeout=30000
 
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-report   
+          
          
           
          
