@@ -23,8 +23,7 @@ jobs:
         run: node tailwind.config.js 
       - name:   run postcss.config.js  
         run: node postcss.config.js
-      - name:   run vite.config.ts
-        run: node vite.config.ts
+      
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -40,5 +39,8 @@ jobs:
 
       - name: Run tests
         run: npm test -- --watchAll=false --passWithNoTests --ci=true --detectOpenHandles=true --forceExit=true --maxWorkers=2 --testTimeout=30000
+
+      - name: run auto prefixer
+        run: npm run autoprefixer -- --watchAll=false --passWithNoTests --ci=true --detectOpenHandles=true --forceExit=true --maxWorkers=2 --testTimeout=30000  
 
      
