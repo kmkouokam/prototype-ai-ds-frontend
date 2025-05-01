@@ -23,6 +23,26 @@ jobs:
         run: node tailwind.config.js 
       - name:   run postcss.config.js  
         run: node postcss.config.js
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.19.1' # Use the version of Node.js you want to test against
+          cache: 'npm' # Cache npm dependencies
+
+      - name: Install dependencies
+        run: npm install --prefer-offline --no-audit --progress=false
+
+      - name: Build
+        run: npm run build
+
+      - name: Run tests
+        run: npm test -- --watchAll=false --passWithNoTests --ci=true --detectOpenHandles=true --forceExit=true --maxWorkers=2 --testTimeout=30000
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report   
          
           
          
