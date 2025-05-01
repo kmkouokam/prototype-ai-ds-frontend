@@ -23,6 +23,8 @@ jobs:
         run: node tailwind.config.js 
       - name:   run postcss.config.js  
         run: node postcss.config.js
+      - name:   run vite.config.ts
+        run: node vite.config.ts
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -39,12 +41,4 @@ jobs:
       - name: Run tests
         run: npm test -- --watchAll=false --passWithNoTests --ci=true --detectOpenHandles=true --forceExit=true --maxWorkers=2 --testTimeout=30000
 
-      - name: run postcss auto prefixer
-        run: npx autoprefixer src/styles/tailwind.css -o src/styles/tailwind-prefixed.css
-
-      - name: run tailwing css
-        run: npx tailwindcss -i ./src/styles/tailwind.css -o ./src/styles/tailwind-prefixed.css --watch --minify --postcss --purge --content ./src/**/*.{html,js,jsx,ts,tsx} --config tailwind.config.js --output-dir ./src/styles/ --purge-content ./src/**/*.{html,js,jsx,ts,tsx} --config tailwind.config.js --output-dir ./src/styles/
-        env:
-          NODE_OPTIONS: --max_old_space_size=4096 # Increase memory limit for Node.js process
-          CI: true # Set CI environment variable to true to enable continuous integration mode for some tools
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Use the GitHub token for authentication if needed by your scripts or tools   
+     
