@@ -43,10 +43,12 @@ jobs:
       - name: install ts-prune globaly
         run: npm install -g ts-prune  
         
-      - name:   remove deprecated packages
+      - name:   run npm audit fix
         run: |
            npm uninstall @types/react-chartjs-2 uuid
            npm install uuid@latest
+           npm fund
+           npm audit fix --force
            npm audit fix 
 
       - name: run postcss.config.js
