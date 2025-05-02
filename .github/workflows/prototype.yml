@@ -40,37 +40,8 @@ jobs:
       - name: Run tests
         run: npm test -- --watchAll=false --passWithNoTests --ci=true --detectOpenHandles=true --forceExit=true --maxWorkers=2 --testTimeout=30000
 
-      - name: run auto prefixer
-        run:  npm install --save-dev autoprefixer tailwindcss postcss postcss-loader 
-        
-      - name: Debug autoprefixer install
-        run: ls -la node_modules/autoprefixer || echo "autoprefixer NOT installed"
-
-      - name: Debug tailwindcss install
-        run: ls -la node_modules/tailwindcss || echo "tailwindcss NOT installed"
-        
-      - name: Debug postcss install
-        run: ls -la node_modules/postcss || echo "postcss NOT installed"
-        
-      - name: Debug postcss-loader install
-        run: ls -la node_modules/postcss-loader || echo "postcss-loader NOT installed"
-        
-      - name: Debug autoprefixer version
-        run: node -e "console.log(require('autoprefixer/package.json').version)" || echo "autoprefixer version NOT found"
-        
-      - name: Debug tailwindcss version
-        run: node -e "console.log(require('tailwindcss/package.json').version)" || echo "tailwindcss version NOT found"
-        
-      - name: Debug postcss version
-        run: node -e "console.log(require('postcss/package.json').version)" || echo "postcss version NOT found"
-        
-      - name: Debug postcss-loader version
       
-        run: node -e "console.log(require('postcss-loader/package.json').version)" || echo "postcss-loader version NOT found"
-
-      - name: Debug autoprefixer install
-      
-        run: ls -la node_modules/autoprefixer || echo "autoprefixer NOT installed"
+        
 
       - name: Force reinstall autoprefixer
         run: npm install autoprefixer --save-dev  
