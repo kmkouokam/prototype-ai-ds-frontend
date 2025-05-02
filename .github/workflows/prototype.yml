@@ -48,3 +48,9 @@ jobs:
            npm uninstall @types/react-chartjs-2 uuid
            npm install uuid@latest
            npm audit fix 
+
+      - name: run postcss.config.js
+        run: |
+          npx postcss src/index.css -o src/output.css --use autoprefixer --no-map --verbose
+          npx postcss src/index.css -o src/output.css --use autoprefixer --no-map --verbose --config ./postcss.config.js
+          npx postcss src/index.css -o src/output.css --use autoprefixer --no-map --verbose --config ./postcss.config.js --dir ./src/output.css  
