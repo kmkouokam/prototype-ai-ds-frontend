@@ -1,6 +1,6 @@
 FROM node:23-slim AS build
 WORKDIR /app
-COPY ./*  ./
+COPY  . .
 LABEL maintainer="Ernestine"
 RUN npm install && npm run build
 
