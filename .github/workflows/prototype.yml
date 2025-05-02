@@ -30,11 +30,7 @@ jobs:
       # - name: Force reinstall autoprefixer
       #   run: npm install autoprefixer --save-dev
 
-      - name: Build
-        run: npm run build
-
-      - name: Run tests
-        run: npm test -- --watchAll=false --passWithNoTests
+       
 
       - name: Run ts-prune
         run: npm install -D ts-prune && npx ts-prune 
@@ -51,8 +47,8 @@ jobs:
            npm audit fix --force
            npm audit fix 
 
-      - name: run postcss.config.js
-        run:  node postcss.config.js
-        
-      - name: run   tailwind.config.js
-        run:  node tailwind.config.js
+      - name: Build CSS (uses PostCSS)
+        run: npm run build # or the script that triggers PostCSS (e.g., `vite build` or `next build`)
+
+      - name: Run tests
+        run: npm test
