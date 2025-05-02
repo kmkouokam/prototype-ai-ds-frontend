@@ -41,7 +41,8 @@ jobs:
         run: npm test -- --watchAll=false --passWithNoTests --ci=true --detectOpenHandles=true --forceExit=true --maxWorkers=2 --testTimeout=30000
 
       
-        
+      - name: Debug autoprefixer install
+        run: ls -la node_modules/autoprefixer || echo "autoprefixer NOT installed"   
 
       - name: Force reinstall autoprefixer
         run: npm install autoprefixer --save-dev  
