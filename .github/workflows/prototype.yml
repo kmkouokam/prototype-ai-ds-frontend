@@ -50,7 +50,7 @@ jobs:
            npm audit fix 
 
       - name: run postcss.config.js
-        run: |
-          npx postcss src/index.css -o src/output.css --use autoprefixer --no-map --verbose
-          npx postcss src/index.css -o src/output.css --use autoprefixer --no-map --verbose --config ./postcss.config.js
-          npx postcss src/index.css -o src/output.css --use autoprefixer --no-map --verbose --config ./postcss.config.js --dir ./src/output.css  
+        run:  node postcss.config.js
+        
+      - name: run   tailwind.config.js
+        run:  node tailwind.config.js
