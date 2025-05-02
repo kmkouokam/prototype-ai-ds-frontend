@@ -27,8 +27,15 @@ jobs:
         run: ls -la node_modules/autoprefixer || echo "autoprefixer NOT installed"
 
       # Optional: Reinstall if needed (debugging)
-      # - name: Force reinstall autoprefixer
-      #   run: npm install autoprefixer --save-dev
+      - name: Force reinstall autoprefixer
+        run: |
+          if [ ! -d "node_modules/autoprefixer" ]; then
+            echo "Reinstalling autoprefixer..."
+            npm install autoprefixer --save-dev
+          else
+            echo "autoprefixer is already installed."
+          fi
+          
 
        
 
