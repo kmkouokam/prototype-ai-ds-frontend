@@ -52,3 +52,6 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+      - name: run audit
+        run: npm audit fix --force  
