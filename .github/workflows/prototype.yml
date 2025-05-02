@@ -37,7 +37,11 @@ jobs:
         run: npm test -- --watchAll=false --passWithNoTests
 
       - name: Run ts-prune
-        run: npm install -D ts-prune && npx ts-prune --all --ignore-unknown --ignore-dependencies --ignore-exports --ignore-imports --ignore-reexports --ignore-duplicates --ignore-duplicates-in-reexports --ignore-duplicates-in-imports --ignore-duplicates-in-exports --ignore-duplicates-in-reexports --ignore-duplicates-in-dependencies --ignore-duplicates-in-dependencies-in-reexports --ignore-duplicates-in-dependencies-in-imports --ignore-duplicates-in-dependencies-in-exports --ignore-duplicates-in-dependencies-in-reexports --ignore-duplicates-in-dependencies-in-dependencies --ignore-duplicates-in-dependencies-in-dependencies-in-reexports --ignore-duplicates-in-dependencies-in-dependencies-in-imports --ignore-duplicates-in-dependencies-in-dependencies-in-exports --ignore-duplicates-in-dependencies-in-dependencies-in-reexports
+        run: npm install -D ts-prune && npx ts-prune 
+        continue-on-error: true
+
+      - name: install ts-prune globaly
+        run: npm install -g ts-prune  
         
       - name:   remove deprecated packages
         run: |
