@@ -43,3 +43,4 @@ jobs:
         run: |
            npm uninstall @types/react-chartjs-2 uuid
            npm install uuid@latest
+           npm audit fix 
