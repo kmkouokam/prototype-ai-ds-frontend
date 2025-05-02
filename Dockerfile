@@ -9,4 +9,4 @@ FROM httpd:2.4.51-buster
 WORKDIR /app
 COPY --from=build /app/dist /usr/local/apache2/htdocs/
 EXPOSE 80
-CMD ["/bin/sh", "-c", "httpd-foreground" && npm start"]
+CMD ["httpd-foreground"]
