@@ -41,6 +41,11 @@ jobs:
         run: npm test -- --watchAll=false --passWithNoTests --ci=true --detectOpenHandles=true --forceExit=true --maxWorkers=2 --testTimeout=30000
 
       - name: run auto prefixer
-        run: npm run autoprefixer -- --watchAll=false --passWithNoTests --ci=true --detectOpenHandles=true --forceExit=true --maxWorkers=2 --testTimeout=30000  
+        run:  npm install autoprefixer postcss-cli --save-dev && npx postcss src/styles/tailwind.css -o src/styles/tailwind-prefixed.css --use autoprefixer
+        
+      # - name: run tailwing css
+      #   run: npm run tailwing -- --watchAll=false --passWithNoTests --ci=true --detectOpenHandles=true --forceExit=true --maxWorkers=2 --testTimeout=30000  
+        
+       
 
      
