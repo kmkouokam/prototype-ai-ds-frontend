@@ -39,3 +39,7 @@ jobs:
       - name: Run ts-prune
         run: npm install -D ts-prune && npx ts-prune --all --ignore-unknown --ignore-dependencies --ignore-exports --ignore-imports --ignore-reexports --ignore-duplicates --ignore-duplicates-in-reexports --ignore-duplicates-in-imports --ignore-duplicates-in-exports --ignore-duplicates-in-reexports --ignore-duplicates-in-dependencies --ignore-duplicates-in-dependencies-in-reexports --ignore-duplicates-in-dependencies-in-imports --ignore-duplicates-in-dependencies-in-exports --ignore-duplicates-in-dependencies-in-reexports --ignore-duplicates-in-dependencies-in-dependencies --ignore-duplicates-in-dependencies-in-dependencies-in-reexports --ignore-duplicates-in-dependencies-in-dependencies-in-imports --ignore-duplicates-in-dependencies-in-dependencies-in-exports --ignore-duplicates-in-dependencies-in-dependencies-in-reexports
         
+      - name:   remove deprecated packages
+        run: |
+           npm uninstall @types/react-chartjs-2 uuid
+           npm install uuid@latest
