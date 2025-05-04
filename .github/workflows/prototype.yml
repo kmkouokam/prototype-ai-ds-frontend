@@ -20,6 +20,16 @@ jobs:
           node-version: '0.8' # Specify the Node.js version you want to use
           cache: 'npm'
 
+      - name: run check update
+        run: |
+          npm install -g npm-check-updates
+          npx npm-check-updates    
+
+      - name: apply updates
+        run: |
+          npx npm-check-updates -u
+          npm install    
+
       - name: Install dependencies
         run: npm install
 
