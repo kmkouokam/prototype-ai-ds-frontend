@@ -17,8 +17,17 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '0.8' # Specify the Node.js version you want to use
+          node-version: 'latest' # Specify the Node.js version you want to use
           cache: 'npm'
+
+      - name: install lts
+        run: |
+          echo "Installing Node.js LTS..."
+          nvm install --lts
+          nvm use --lts
+          node -v 
+          npm -v
+          npx -v   
 
       - name: clean up node_modules
         run: |
