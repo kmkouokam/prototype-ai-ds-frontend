@@ -20,6 +20,17 @@ jobs:
           node-version: 'latest' # Specify the Node.js version you want to use
           cache: 'npm'
 
+      - name: Install Node.js using NVM
+        run: |
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm install 3.9.9
+          nvm use 3.9.9
+          node -v
+          npm -v
+    
+
       - name: install lts
         run: |
           echo "Installing Node.js LTS..."
