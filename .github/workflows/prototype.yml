@@ -31,14 +31,14 @@ jobs:
           npm -v
     
 
-      - name: install lts
-        run: |
-          echo "Installing Node.js LTS..."
-          nvm install --lts
-          nvm use --lts
-          node -v 
-          npm -v
-          npx -v   
+      # - name: install lts
+      #   run: |
+      #     echo "Installing Node.js LTS..."
+      #     nvm install --lts
+      #     nvm use --lts
+      #     node -v 
+      #     npm -v
+      #     npx -v   
 
       - name: clean up node_modules
         run: |
