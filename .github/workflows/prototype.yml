@@ -20,6 +20,13 @@ jobs:
           node-version: '0.8' # Specify the Node.js version you want to use
           cache: 'npm'
 
+      - name: clean up node_modules
+        run: |
+          echo "Cleaning up node_modules..."
+          rm -rf node_modules package-lock.json 
+          npm cahe clean --force
+          npm cache verify   
+
       - name: run check update
         run: |
           npm install -g npm-check-updates
@@ -30,8 +37,8 @@ jobs:
           npx npm-check-updates -u
           npm install    
 
-      - name: Install dependencies
-        run: npm install
+      # - name: Install dependencies
+      #   run: npm install
 
       - name: Debug autoprefixer install
         run: ls -la node_modules/autoprefixer || echo "autoprefixer NOT installed"
