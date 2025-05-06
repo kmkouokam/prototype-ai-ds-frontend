@@ -81,7 +81,7 @@ jobs:
         run: npm audit fix --force 
 
       - name: upload Build Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: build-artifact
           path: ./dist # Adjust this path to your build output directory   
