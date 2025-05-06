@@ -22,7 +22,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*' # Use the latest LTS version
+          node-version: '0.8' # Use the latest LTS version
           cache: 'npm'
 
       # - name: Clean node_modules and cache
