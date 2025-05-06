@@ -25,20 +25,20 @@ jobs:
           node-version: '20' # Use the latest LTS version
           cache: 'npm'
 
-      # - name: Clean node_modules and cache
-      #   run: |
-      #     echo "Cleaning node_modules and npm cache..."
-      #     rm -rf node_modules package-lock.json
-      #     npm cache clean --force
-      #     npm cache verify
-      #     run npm fund 
-      #     npm audit fix --force
+      - name: Clean node_modules and cache
+        run: |
+          echo "Cleaning node_modules and npm cache..."
+          rm -rf node_modules package-lock.json
+          npm cache clean --force
+          npm cache verify
+          run npm fund 
+          npm audit fix --force
 
-      # - name: Check and update dependencies
-      #   run: |
-      #     npm install -g npm-check-updates
-      #     ncu -u
-      #     npm install
+      - name: Check and update dependencies
+        run: |
+          npm install -g npm-check-updates
+          ncu -u
+          npm install
 
       - name: Debug autoprefixer install
         run: |
