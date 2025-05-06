@@ -27,12 +27,10 @@ jobs:
 
       - name: Clean node_modules and cache
         run: |
-          echo "Cleaning node_modules and npm cache..."
-          rm -rf node_modules package-lock.json
-          npm cache clean --force
-          npm cache verify
-          run npm fund 
-          npm audit fix --force
+           echo "Cleaning node_modules and npm cache..."
+           rm -rf node_modules
+           npm cache clean --force
+           npm install
 
       - name: Check and update dependencies
         run: |
