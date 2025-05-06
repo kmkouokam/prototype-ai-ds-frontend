@@ -31,8 +31,8 @@ jobs:
           rm -rf node_modules package-lock.json
           npm cache clean --force
           npm cache verify
-           run npm fund 
-           npm audit fix --force
+          run npm fund 
+          npm audit fix --force
 
       - name: Check and update dependencies
         run: |
