@@ -28,7 +28,8 @@ jobs:
       - name: Clean node_modules and cache
         run: |
            echo "Cleaning node_modules and npm cache..."
-           rm -rf node_modules
+           rm -rf node_modules package-lock.json
+           rm -rf ~/.npm
            npm cache clean --force
            npm install
 
