@@ -87,6 +87,6 @@ jobs:
           path: ./dist # Adjust this path to your build output directory   
 
       - name: Perform CodeQL Analysis
-        uses:  /codeql-action/analyze@v2  
+        uses:  /codeql-action/analyze@v4  
 
           
