@@ -62,13 +62,13 @@ jobs:
       - name: Install ts-prune globally (optional)
         run: npm install -g ts-prune
 
-      # - name: Remove and reinstall problematic packages
-      #   run: |
-      #     npm uninstall @types/react-chartjs-2 uuid
-      #     npm install uuid@latest
-      #     npm fund
-      #     npm audit fix --force
-      #     npm audit fix
+      - name: Remove and reinstall problematic packages
+        run: |
+          npm uninstall @types/react-chartjs-2 uuid
+          npm install uuid@latest
+          npm fund
+          npm audit fix --force
+          npm audit fix
 
       - name: Build CSS (PostCSS, Vite, etc.)
         run: npm run build
