@@ -38,7 +38,7 @@ jobs:
           npm install -g npm-check-updates
           ncu -u
           npm install
-          npm-force-resolutions
+          npm force-resolutions
 
       - name: Debug autoprefixer install
         run: |
