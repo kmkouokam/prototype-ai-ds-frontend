@@ -22,7 +22,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '21' # Use the latest LTS version
+          node-version: '22' # Use the latest LTS version
           cache: 'npm'
 
       - name: Clean node_modules and cache
@@ -38,7 +38,7 @@ jobs:
           npm install -g npm-check-updates
           ncu -u
           npm install
-          npm force-resolutions
+          npm --force-resolutions
 
       - name: Debug autoprefixer install
         run: |
@@ -59,11 +59,11 @@ jobs:
           npx ts-prune
           npm fund
           npm audit fix --force
-          npm-force-resolutions
+           
 
       - name: Install ts-prune globally (optional)
         run: npm install -g ts-prune
-             npm-force-resolutions
+              
 
       - name: Remove and reinstall problematic packages
         run: |
@@ -72,7 +72,7 @@ jobs:
           npm fund
           npm audit fix --force
           npm audit fix
-          npm-force-resolutions
+           
 
       - name: Build CSS (PostCSS, Vite, etc.)
         run: npm run build
