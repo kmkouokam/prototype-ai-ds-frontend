@@ -14,7 +14,7 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/material": "^5.15.17",
-    "amqplib": "^0.10.4",
+    "amqplib": "^0.10.8",
     "axios": "^1.6.8",
     "chart.js": "^4.4.3",
     "chartjs-chart-matrix": "^2.0.1",
