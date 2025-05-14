@@ -39,7 +39,7 @@ jobs:
           npm run build || true
           
       - name: run tests (no test implemented)
-        run: "no test implemented yet"
+        run: echo "no test implemented yet"
 
       - name: run eslint #This will catch bad coding practices and some security issues
         run: |
