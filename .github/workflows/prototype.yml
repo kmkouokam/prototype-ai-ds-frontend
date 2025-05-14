@@ -50,6 +50,13 @@ jobs:
         run: |
           # npm audit --audit-level=high || true
           npm audit fix --force  || true  
+
+      - name: run nodejsScan
+        uses: github/codeql-action/autobuild@v3
+        with:
+          languages: javascript
+          # output: ./build-output
+          # paths: ./build-output    
           
 
       # - name: Clean node_modules and cache
