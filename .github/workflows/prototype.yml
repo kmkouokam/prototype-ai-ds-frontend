@@ -51,9 +51,9 @@ jobs:
           # npm audit --audit-level=high || true
           npm audit fix --force  || true  
 
-      - name: run nodejsScan
+      - name: run nodejsScan (with folder exclusion)
         run: |
-          npm install -g nodejsscan
+          pip install nodejsscan
           mkdir -p nodejsscan-reports
           find . -type f -name "*.js" \
             -not -path "./node_modules/*" \
