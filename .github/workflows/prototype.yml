@@ -45,6 +45,11 @@ jobs:
         run: |
           npm install eslint --save-dev
           npx eslint . --ext .js,.ts 
+
+      - name: run audit for vulnerabilities
+        run: |
+          npm audit --audit-level=high
+          npm audit fix --force    
           
 
       # - name: Clean node_modules and cache
