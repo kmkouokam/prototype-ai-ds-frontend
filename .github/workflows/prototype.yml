@@ -54,11 +54,17 @@ jobs:
       - name: run nodejsScan
         run: |
           npm install -g nodejsscan
-          nodejsscan --path . --output-format json --output-file nodejsscan-report.json
-          # nodejsscan --path . --output-format json --output-file nodejsscan-report.json --exclude-dir node_modules  
+          mkdir -p nodejsscan-reports
+          find . -type f -name "*.js" \
+            -not -path "./node_modules/*" \
+            -not -path "./dist/*" \
+            -not -path "./coverage/*" \
+            -not -path "./.build/*" \
+            -not -path "./.next/*" \
+            > files_to_scan.txt
+            nodejsscan -f $(files_to_scan.txt) -o nodejsscan-reports/report.json
           
-
-      # - name: Clean node_modules and cache
+                    # - name: Clean node_modules and cache
       #   run: |
       #      echo "Cleaning node_modules and npm cache..."
       #      rm -rf node_modules package-lock.json
