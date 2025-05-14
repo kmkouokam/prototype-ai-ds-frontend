@@ -52,11 +52,10 @@ jobs:
           npm audit fix --force  || true  
 
       - name: run nodejsScan
-        uses: github/codeql-action/autobuild@v3
-        with:
-          languages: javascript
-          # output: ./build-output
-          # paths: ./build-output    
+        run: |
+          npm install -g nodejsscan
+          nodejsscan --path . --output-format json --output-file nodejsscan-report.json
+          # nodejsscan --path . --output-format json --output-file nodejsscan-report.json --exclude-dir node_modules  
           
 
       # - name: Clean node_modules and cache
