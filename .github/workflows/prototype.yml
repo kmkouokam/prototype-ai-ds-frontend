@@ -38,13 +38,13 @@ jobs:
         run: |
           npm run build || true
           
-      # - name: run tests (no test implemented)
-      #   run: "no test implemented yet"
+      - name: run tests (no test implemented)
+        run: "no test implemented yet"
 
-      # - name: run eslint #This will catch bad coding practices and some security issues
-      #   run: |
-      #     npm install eslint --save-dev
-      #     npx eslint . --ext .js,.ts 
+      - name: run eslint #This will catch bad coding practices and some security issues
+        run: |
+          npm install eslint --save-dev
+          npx eslint . --ext .js,.ts 
           
 
       # - name: Clean node_modules and cache
