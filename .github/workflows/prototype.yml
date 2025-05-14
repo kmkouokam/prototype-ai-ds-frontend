@@ -62,7 +62,7 @@ jobs:
             -not -path "./.build/*" \
             -not -path "./.next/*" \
             > files_to_scan.txt
-            nodejsscan -f $(files_to_scan.txt) -o nodejsscan-reports/report.json
+            nodejsscan -f $(cat files_to_scan.txt) -o nodejsscan-reports/report.json
           
                     # - name: Clean node_modules and cache
       #   run: |
