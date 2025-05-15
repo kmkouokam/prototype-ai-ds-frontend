@@ -63,7 +63,22 @@ jobs:
             -not -path "./.next/*" \
             > files_to_scan.txt
             nodejsscan -f $(cat files_to_scan.txt) -o nodejsscan-reports/report.json
-          
+      
+      - name: Notify Slack  #Store your webhook URL as a secret (SLACK_WEBHOOK) in your repo settings @https://api.slack.com/messaging/webhooks
+        if: failure() || success()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+              SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+              SLACK_MESSAGE: "Build ${{ job.status }} for ${{ github.repository }} on ${{ github.ref }}"
+           #Webhook URL for Slack notifications: https://join.slack.com/t/internship-rma1183/shared_invite/zt-35s0h7vip-5J8D~M_3QpLfp9YqVwMrPA
+              SLACK_COLOR: ${{ job.status == 'success' && 'good' || 'danger' }}
+              SLACK_CHANNEL: '#all-internship'
+                
+
+
+
+
+
                     # - name: Clean node_modules and cache
       #   run: |
       #      echo "Cleaning node_modules and npm cache..."
