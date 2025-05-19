@@ -1,0 +1,27 @@
+GithubActions
+These actions automate deployment pipelines, and automate build and test processes
+
+ 
+The workflows are defined on event carine, which is the only branch we have
+The pull request is done on that same branch. Not appropriate for production.
+The permission granted to the workflow is set on 
+action: read. 
+contents: read Allow metadata about other workflow, 
+and, 
+security-events: allows reading of repository contents
+
+
+the job definition is run on a container with latest ubuntu image
+
+in the steps:
+1- the first action is to check the source code
+2- the second to set up node.js version 18
+3- the third action to install dependencies
+4- the fourth is to run the build. The build is piped to true (|| true) to force the build event without scaning the code for vulnerabilities.
+5- the fith action is ste to skip the test because we do ot have the test.js file yet
+6- sixth action is going to istall eslint that will catch all bad coding and vulnerabilities inside the code. It scans all files with js and ts extension
+7- the seventh audit for vulnerabilities
+8- the eighth run nodejsscan with file exlusion to see if there is any vulnerabilities
+
+
+
