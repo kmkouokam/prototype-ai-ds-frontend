@@ -77,14 +77,14 @@ jobs:
       # - name: Run unit tests
       #   run: npm test
         
-#       - name: Archive build artifacts
-#         if: success()
-#         uses: actions/upload-artifact@v3
-#         with:
-#                 name: build-artifacts
-#                 path: |
-#                   dist/
-#                   coverage/        
+      - name: Archive build artifacts
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+                name: build-artifacts
+                path: |
+                  dist/
+                           
       
 #       - name: Set up Docker Buildx
 #         uses: docker/setup-buildx-action@v3
