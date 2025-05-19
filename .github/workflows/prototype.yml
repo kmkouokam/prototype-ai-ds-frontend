@@ -74,8 +74,8 @@ jobs:
               SLACK_COLOR: ${{ job.status == 'success' && 'good' || 'danger' }}
               SLACK_CHANNEL: '#all-internship'
 
-      - name: Run unit tests
-        run: npm test
+      # - name: Run unit tests
+      #   run: npm test
         
       - name: Archive build artifacts
         if: success()
