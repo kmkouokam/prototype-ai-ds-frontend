@@ -58,8 +58,10 @@ jobs:
           # npm audit --audit-level=high || true
           npm audit fix --force  || true  
 
-          - name: Save audit report
-          run: npm audit --json > audit-report.json
+        
+        
+      - name: Save audit report
+        run: npm audit --json > audit-report.json
         
       - name: Upload audit report
         uses: actions/upload-artifact@v4
