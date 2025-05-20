@@ -58,6 +58,16 @@ jobs:
           # npm audit --audit-level=high || true
           npm audit fix --force  || true  
 
+          - name: Save audit report
+          run: npm audit --json > audit-report.json
+        
+      - name: Upload audit report
+        uses: actions/upload-artifact@v3
+        with:
+            name: npm-audit-report
+            path: audit-report.json
+             
+
       - name: run nodejsScan (with folder exclusion)
         run: |
           pip install nodejsscan
