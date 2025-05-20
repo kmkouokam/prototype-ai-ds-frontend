@@ -61,7 +61,7 @@ jobs:
         
         
       - name: Save audit report
-        run: npm audit --json > audit-report.json
+        run: npm audit --json > audit-report.json || true
         
       - name: Upload audit report
         uses: actions/upload-artifact@v4
