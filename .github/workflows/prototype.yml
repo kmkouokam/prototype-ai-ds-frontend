@@ -1,4 +1,4 @@
-name: Node.js CI
+name: ⚙️ Node.js CI Workflow
 
 on:
   push:
@@ -12,65 +12,50 @@ permissions:
   security-events: write
 
 jobs:
-  build-and-test:
+  build-and-deploy:
+    name: 🚀 Build, Scan & Deploy
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: 🔄 Checkout Repository
         uses: actions/checkout@v3
 
-      # - name: Initialize CodeQL
-      #   uses: github/codeql-action/init@v3
-      #   with:
-      #     languages: javascript  
-
-      - name: Set up Node.js
+      - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18' # Use the latest LTS version
-          # cache: 'npm'
+          node-version: '18'
 
-      - name: install dependencies
-        run: |
-          npm install
-           
-      - name: run build
-        run: |
-          npm run build || true
+      - name: 📦 Install Dependencies
+        run: npm install
 
-      - name: Create dummy dist folder if missing
-        run: |
-            if [ ! -d "dist" ]; then
-              mkdir dist
-              echo "<html><body><h1>Dummy Build</h1></body></html>" > dist/index.html
-            fi      
-          
-      - name: run tests (no test implemented)
-        run: echo "no test implemented yet"
+      - name: 🛠️ Build Project
+        run: npm run build || true
 
-      - name: run eslint #This will catch bad coding practices and some security issues
+      - name: 🧱 Ensure dist Directory Exists
         run: |
-          npm install eslint --save-dev  || true
-          npx eslint . --ext .js,.ts 
+          if [ ! -d "dist" ]; then
+            mkdir dist
+            echo "<html><body><h1>Dummy Build</h1></body></html>" > dist/index.html
+          fi
 
-      - name: run audit for vulnerabilities
+      - name: 🧹 Lint Code (ESLint)
         run: |
-          # npm audit --audit-level=high || true
-          npm audit fix --force  || true  
+          npm install eslint --save-dev || true
+          npx eslint . --ext .js,.ts
 
-        
-        
-      - name: Save audit report
+      - name: 🛡️ Fix Vulnerabilities (npm audit fix)
+        run: npm audit fix --force || true
+
+      - name: 📊 Generate Audit Report (JSON)
         run: npm audit --json > audit-report.json || true
-        
-      - name: Upload audit report
+
+      - name: 📁 Upload Audit Report
         uses: actions/upload-artifact@v4
         with:
-            name: npm-audit-report
-            path: audit-report.json
-             
+          name: npm-audit-report
+          path: audit-report.json
 
-      - name: run nodejsScan (with folder exclusion)
+      - name: 🔍 Run Node.jsScan (Static Analysis)
         run: |
           pip install nodejsscan
           mkdir -p nodejsscan-reports
@@ -79,133 +64,37 @@ jobs:
             -not -path "./dist/*" \
             -not -path "./coverage/*" \
             -not -path "./.build/*" \
-            -not -path "./.next/*" \
-            > files_to_scan.txt
-            nodejsscan -f $(cat files_to_scan.txt) -o nodejsscan-reports/report.json
-      
-      - name: Notify Slack  #Store your webhook URL as a secret (SLACK_WEBHOOK) in your repo settings @https://api.slack.com/messaging/webhooks
-        if: always()
-        uses: rtCamp/action-slack-notify@v2
-        env:
-              SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-              SLACK_MESSAGE: "Build ${{ job.status }} for ${{ github.repository }} on ${{ github.ref }}"
-           #Webhook URL for Slack notifications: https://join.slack.com/t/internship-rma1183/shared_invite/zt-35s0h7vip-5J8D~M_3QpLfp9YqVwMrPA
-              SLACK_COLOR: ${{ job.status == 'success' && 'good' || 'danger' }}
-              SLACK_CHANNEL: '#all-internship'
+            -not -path "./.next/*" > files_to_scan.txt
+          nodejsscan -f $(cat files_to_scan.txt) -o nodejsscan-reports/report.json
 
-      # - name: Run unit tests
-      #   run: npm test
-        
-      - name: Archive build artifacts #store build artifacts to github
+      - name: 🧪 (Optional) Run Unit Tests
+        if: false # change to `true` or remove to enable
+        run: npm test
+
+      - name: 📦 Archive Build Artifacts
         if: success()
         uses: actions/upload-artifact@v4
         with:
-                name: build-artifacts
-                path: |
-                  dist/
+          name: build-artifacts
+          path: dist/
 
-
-
-    #or to s3 bucket
-      - name: Upload to S3
+      - name: ☁️ Upload to S3 (Production)
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --delete
         env:
-          AWS_S3_BUCKET: refontebucket 
+          AWS_S3_BUCKET: refontebucket
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: us-east-1
           SOURCE_DIR: dist
-     
-                           
-      
-#       - name: Set up Docker Buildx
-#         uses: docker/setup-buildx-action@v4
-            
-#       - name: Log in to DockerHub
-#         uses: docker/login-action@v3
-#         with:
-#                     username: ${{ secrets.DOCKERHUB_USERNAME }}
-#                     password: ${{ secrets.DOCKERHUB_TOKEN }}
-            
-#       - name: Build and push Docker image
-#         uses: docker/build-push-action@v5
-#         with:
-#                     context: .
-#                     push: true
-#                     tags: ${{ secrets.DOCKERHUB_USERNAME }}/refonte:latest            
 
-# #
-
-
-
-#                     # - name: Clean node_modules and cache
-#       #   run: |
-#       #      echo "Cleaning node_modules and npm cache..."
-#       #      rm -rf node_modules package-lock.json
-#       #      rm -rf ~/.npm
-      #      npm cache clean --force
-      #      npm install
-
-      # - name: Check and update dependencies
-      #   run: |
-      #     npm install -g npm-check-updates
-      #     ncu -u
-      #     npm install
-           
-
-      # - name: Debug autoprefixer install
-      #   run: |
-      #     ls -la node_modules/autoprefixer || echo "autoprefixer NOT installed"
-
-      # - name: Force reinstall autoprefixer if missing
-      #   run: |
-      #     if [ ! -d "node_modules/autoprefixer" ]; then
-      #       echo "Reinstalling autoprefixer..."
-      #       npm install autoprefixer --save-dev
-      #     else
-      #       echo "autoprefixer is already installed."
-      #     fi
-
-      # - name: Run ts-prune and fix vulnerabilities
-      #   run: |
-      #     npm install -D ts-prune
-      #     npx ts-prune
-      #     npm fund
-      #     npm audit fix --force
-           
-
-      # - name: Install ts-prune globally (optional)
-      #   run: npm install -g ts-prune
-              
-
-      # - name: Remove and reinstall problematic packages
-      #   run: |
-      #     npm uninstall @types/react-chartjs-2 uuid
-      #     npm install uuid@latest
-      #     npm fund
-      #     npm audit fix --force
-      #     npm audit fix
-           
-
-      # - name: Build CSS (PostCSS, Vite, etc.)
-      #   run: npm run build
-             
-
-      # - name: Run tests
-      #   run: npm test
-
-      # - name: Final audit fix
-      #   run: npm audit fix --force 
-
-      # - name: upload Build Artifacts
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: build-artifact
-      #     path: ./dist # Adjust this path to your build output directory   
-
-      # - name: Perform CodeQL Analysis
-      #   uses:  github/codeql-action/analyze@v3
-
-          
+      - name: 📢 Slack Notification
+        if: always()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: "Build *${{ job.status }}* for *${{ github.repository }}* on `${{ github.ref }}`"
+          SLACK_COLOR: ${{ job.status == 'success' && 'good' || 'danger' }}
+          SLACK_CHANNEL: '#all-internship'
+ 
