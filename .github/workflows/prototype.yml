@@ -65,7 +65,7 @@ jobs:
             nodejsscan -f $(cat files_to_scan.txt) -o nodejsscan-reports/report.json
       
       - name: Notify Slack  #Store your webhook URL as a secret (SLACK_WEBHOOK) in your repo settings @https://api.slack.com/messaging/webhooks
-        if: failure() || success()
+        if: always()
         uses: rtCamp/action-slack-notify@v2
         env:
               SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
