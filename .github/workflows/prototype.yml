@@ -101,4 +101,4 @@ jobs:
           SLACK_MESSAGE: "Build *${{ job.status }}* for *${{ github.repository }}* on `${{ github.ref }}`"
           SLACK_COLOR: ${{ job.status == 'success' && 'good' || 'danger' }}
           SLACK_CHANNEL: '#all-internship'
- 
+ ######
