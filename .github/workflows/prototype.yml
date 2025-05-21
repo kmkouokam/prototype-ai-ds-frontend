@@ -2,8 +2,9 @@ name: ⚙️ Node.js CI Workflow
 
 on:
   push:
-    branches: [main, carine]
+    branches: [carine, staging, production, main]
   pull_request:
+    branches: [main]  # Only run PR checks if merging into main
 
 permissions:
   actions: read
@@ -105,7 +106,7 @@ jobs:
     name: 🚀 Deploy to S3 (Production)
     runs-on: ubuntu-latest
     needs: [test-lint-build, security-audit]
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/production'
 
     steps:
       - name: ⬇️ Download Artifacts
