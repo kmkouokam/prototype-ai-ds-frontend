@@ -94,6 +94,19 @@ jobs:
           AWS_REGION: us-east-1
           SOURCE_DIR: dist
 
+      - name: 📰 Post-Deployment Notification
+        run: |
+            echo "Deployment completed to ${{ github.ref == 'refs/heads/main' && 'Production' || 'Staging' }} environment." > deployment-report.txt
+            echo "Date: $(date)" >> deployment-report.txt
+            echo "Commit: $GITHUB_SHA" >> deployment-report.txt
+            echo "Actor: $GITHUB_ACTOR" >> deployment-report.txt
+  
+      - name: 📁 Upload Deployment Report
+        uses: actions/upload-artifact@v4
+        with:
+            name: deployment-report
+            path: deployment-report.txt    
+
       - name: 📢 Slack Notification
         if: always()
         uses: rtCamp/action-slack-notify@v2
