@@ -3,6 +3,7 @@ name: ⚙️ Node.js CI/CD Workflow
 on:
   push:
     branches:
+      - carine
       - staging
       - main
   pull_request:
