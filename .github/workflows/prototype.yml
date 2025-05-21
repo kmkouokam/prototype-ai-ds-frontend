@@ -1,10 +1,14 @@
-name: ⚙️ Node.js CI Workflow
+name: ⚙️ Node.js CI/CD Workflow
 
 on:
   push:
-    branches: ["carine"]
+    branches:
+      - staging
+      - main
   pull_request:
-    branches: ["carine"]
+    branches:
+      - staging
+      - main
 
 permissions:
   actions: read
@@ -25,10 +29,10 @@ jobs:
         with:
           node-version: '18'
 
-      - name: 📦 Install Dependencies
+      - name: 📆 Install Dependencies
         run: npm install
 
-      - name: 🛠️ Build Project
+      - name: 💠 Build Project
         run: npm run build || true
 
       - name: 🧱 Ensure dist Directory Exists
@@ -78,12 +82,12 @@ jobs:
           name: build-artifacts
           path: dist/
 
-      - name: ☁️ Upload to S3 (Production)
+      - name: ☁️ Upload to S3 (Env-specific)
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --delete
         env:
-          AWS_S3_BUCKET: refontebucket
+          AWS_S3_BUCKET: ${{ github.ref == 'refs/heads/main' && secrets.AWS_S3_BUCKET_PROD || secrets.AWS_S3_BUCKET_STAGING }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: us-east-1
