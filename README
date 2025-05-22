@@ -1,27 +1,75 @@
 GithubActions
-These actions automate deployment pipelines, and automate build and test processes
+These actions automate deployment pipelines, and automate build and test processes  with post-deployment action and performance optimization
 
- 
-The workflows are defined on event carine, which is the only branch we have
-The pull request is done on that same branch. Not appropriate for production.
+ this code setup Github Actions workflow with events configured to support pushes to carine, staging, and production, while only triggering pull requests when targeting main
+
+**Permissions**
 The permission granted to the workflow is set on 
 action: read. 
 contents: read Allow metadata about other workflow, 
 and, 
 security-events: allows reading of repository contents
 
+# Jobs
+**Runner**
+the job definition runs on a container with latest ubuntu image
 
-the job definition is run on a container with latest ubuntu image
+test-lint-build phase:
+Under test and Build we have steps:
+ **Steps**
+1- 🔄 Checkout Repository: check the source code
+2- ⚙️ Setup Node.js version in the marix format for speed and compatibility testing. Also set up cache npm to speed up the workflows by avoiding re-downloading and re-installing dependencies every time the pipeline runs
+3- 📦 Install Dependencies
+4-  🧹 Lint Code: install eslint to analyze the code to find problems and and enforce consistent code style, syntax rules, and best practices
+ 
+5- 🧪 Run Unit Tests (optional): set to skip the test because we do ot have the test.js file yet
+6- create a dummy index.html file in dist directory
+7- 📦 Upload Build Artifacts
 
-in the steps:
-1- the first action is to check the source code
-2- the second to set up node.js version 18
-3- the third action to install dependencies
-4- the fourth is to run the build. The build is piped to true (|| true) to force the build event without scaning the code for vulnerabilities.
-5- the fith action is ste to skip the test because we do ot have the test.js file yet
-6- sixth action is going to istall eslint that will catch all bad coding and vulnerabilities inside the code. It scans all files with js and ts extension
-7- the seventh audit for vulnerabilities
-8- the eighth run nodejsscan with file exlusion to see if there is any vulnerabilities
+**Security Audit Phase**
+🔒 Audit & Static Scan: defines a job named security-audit in the workflow.
+      - run on linux based
+      - needs: test-lint-build:  depends on the successful completion of the test-lint-build job. If test-lint-build fails, this one won't run.
+      **needs: test-lint-build** set up dependency
+      
+ 
+Under Security Audit, we have steps define:
+1- 🔄 Checkout Repository again
+2- ⚙️ Setup Node.js again version 18 and cache to avoid redundancy or repetion of same task to speed up the process
+3- 📦 Install Dependencies
+4- 🛡️ Fix Vulnerabilities with npm audit fix
+    - npm audit fix:
+       Scans your package-lock.json for vulnerable packages.
+       Automatically updates them to non-vulnerable versions, if safe.
+    - --force:
+       Forces updates even if they introduce breaking changes.
+       This is useful in CI to patch quickly, but should be used cautiously in production. 
+    -  || true:
+       Prevents the workflow from failing if the command exits with an error (e.g., fix not possible).
+       Ensures the workflow continues regardless of the audit result.
 
+5- 📊 Generate Audit Report: Runs a full security audit and saves the output in JSON format to a file called **audit-report.json**. It contains detailed information about vulnerable packages, security levels, remediation advice, and dependency paths.
+
+6- 📁 Upload Audit Report to GitHub
+7- 🔍 Run Node.jsScan  to perform Static Security Analysis on all .js file inside the code and save it in files_to_scan.txt in nodejsscan-reports directory.
+find . -type f -name "*.js": Gathers a list of JavaScript files to scan, while excluding folders like node_modules, dist
+8- 📁 Upload nodejsscan Report to Github
+
+**Deployment Phase**
+🚀 Deploy to S3: condition is set to if ref/head is prodution upload to s3 production bucket
+       - run on linux based
+       - needs: test-lint-build:  depends on the successful completion of the test-lint-build job. If test-lint-build fails, this one won't run.
+       - needs: security-audit: depends on successful run of security audit
+
+Under Deployment we have steps define:
+1- ⬇️ Download Artifacts: retrieve previously uploaded files (artifacts) from earlier jobs in the workflow —form the build outputs so they can be used in the current job 
+2- ☁️ Upload to S3 
+3- 📝 Deployment Report:Its generates a text file summarizing the deployment details, such as the time it happened, the branch deployed, and the commit SHA
+4- 📁 Upload Deployment Report to GitHub
+5- 📢 Slack Notification 
+     
+
+ 
+ 
 
 
