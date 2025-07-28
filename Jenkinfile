@@ -7,7 +7,7 @@ pipeline {
     AWS_REGION = 'us-east-1'
     DIST_DIR = 'dist'
     REPORT_DIR = "reports"
-    AWS_CREDENTIALS_ID = 'jenkins-credentials-cicd'
+    AWS_CREDENTIALS_ID = 'jenkins-credentials-ci-cd'
   }
 
   tools {
