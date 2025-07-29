@@ -12,6 +12,7 @@ pipeline {
 
   tools {
     nodejs "NodeJS_18" // Use the Node.js tool installed via Jenkins global tool config
+    jdk "JDK21"
   }
 
   stages {
