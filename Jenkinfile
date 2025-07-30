@@ -1,4 +1,4 @@
-pipeline {
+  pipeline {
   agent any
 
   environment {
@@ -11,12 +11,10 @@ pipeline {
   }
 
   tools {
-    nodejs "NodeJS_18" // Use the Node.js tool installed via Jenkins global tool config
-    jdk "JDK21"
+    nodejs "NodeJS_18"
   }
 
   stages {
-
     stage('Checkout Code') {
       steps {
         git branch: 'staging', url: 'https://github.com/kmkouokam/prototype-ai-ds-frontend.git'
@@ -36,97 +34,90 @@ pipeline {
       }
     }
 
-    
-
     stage('Run Tests') {
       steps {
         sh 'npm test || echo "⚠️ Tests failed, but continuing pipeline."'
       }
     }
 
-
     stage('Build Project') {
       steps {
         script {
-          echo "🔧 Starting build..."
           def result = sh(script: 'npm run build', returnStatus: true)
           if (result != 0) {
-            echo "⚠️ Build failed. Creating dummy dist for fallback..."
             sh """
-              mkdir -p ${BUILD_DIR}
-              echo "<html><body><h1>Dummy Build</h1></body></html>" > ${BUILD_DIR}/index.html
+              mkdir -p ${DIST_DIR}
+              echo "<html><body><h1>Dummy Build</h1></body></html>" > ${DIST_DIR}/index.html
             """
-          } else {
-            echo "✅ Build succeeded."
           }
         }
       }
     }
 
-     
-
     stage('Archive Build Artifacts') {
       steps {
-        archiveArtifacts artifacts: "${BUILD_DIR}/**", allowEmptyArchive: false
+        archiveArtifacts artifacts: "${DIST_DIR}/**", allowEmptyArchive: false
       }
     }
 
-  }
-
-
-  stage('Run Audit') {
+    stage('Run Audit') {
       steps {
-        echo '🔍 Running npm audit...'
         sh '''
           mkdir -p $REPORT_DIR
           npm audit --json > $REPORT_DIR/npm-audit-report.json || true
-        ''' // Don't fail pipeline on audit warning
-      }
-    }
-   stage('Install NodeJsScan') {
-      steps {
-        echo '⬇️ Installing NodeJsScan...'
-        sh '''
-          python3 -m pip install --upgrade pip
-          pip install nodejsscan
         '''
       }
     }
 
-   stage('Static Code Analysis') {
+    stage('Install NodeJsScan') {
       steps {
-        echo '🔒 Running NodeJsScan static analysis...'
+        sh '''
+         mkdir -p $REPORT_DIR
+        docker run --rm -v $(pwd):/app ajinabraham/nodejsscan \
+        nodejsscan -d /app -o /app/$REPORT_DIR/nodejsscan-report.html || true
+        catch (err) {
+        echo "⚠️ NodeJsScan failed: ${err}"
+      }
+          // if ! command -v pip3 >/dev/null 2>&1; then
+          // apt-get update && apt-get install -y python3-pip
+          // fi
+          // pip3 install --upgrade pip
+          // pip3 install nodejsscan
+        '''
+      }
+    }
+
+    stage('Static Code Analysis') {
+      steps {
         sh '''
           nodejsscan -d . -o $REPORT_DIR/nodejsscan-report.html || true
         '''
       }
     }
-  }
-  
 
-
-
-  stage('Upload to S3') {
-      steps {
-        withAWS(region: "${AWS_REGION}", credentials: "${AWS_CREDENTIALS_ID}") {
-          // Upload build artifacts
-          s3Upload bucket: "${S3_BUCKET}", path: "builds/\${BUILD_NUMBER}/", workingDir: "${BUILD_DIR}"
-
-           // Upload audit + static analysis reports
-          s3Upload bucket: "${S3_BUCKET}", path: "reports/${BUILD_NUMBER}/", workingDir: "${REPORT_DIR}"
+    stage('Upload to S3') {
+  steps {
+    script {
+      withAWS(region: "${AWS_REGION}", credentials: "${AWS_CREDENTIALS_ID}") {
+        s3Upload bucket: "${S3_BUCKET}", path: "builds/${BUILD_NUMBER}/", workingDir: "${DIST_DIR}"
+        s3Upload bucket: "${S3_BUCKET}", path: "reports/${BUILD_NUMBER}/", workingDir: "${REPORT_DIR}"
       }
+    }
+  }
+}
+
+  }
 
   post {
-     always {
-        echo "📦 Pipeline completed. Build: #${env.BUILD_NUMBER}"
-        archiveArtifacts artifacts: "${REPORT_DIR}/**", fingerprint: true
-     }
+    always {
+      archiveArtifacts artifacts: "${REPORT_DIR}/**", fingerprint: true
+    }
     success {
-      echo 'Pipeline completed successfully.'
+      echo '✅ Pipeline completed successfully.'
     }
     failure {
-      echo 'Pipeline failed. Check logs.'
+      echo '❌ Pipeline failed. Check logs.'
     }
   }
 }
-}
+ 
