@@ -12,6 +12,7 @@
 
   tools {
     nodejs "NodeJS_18"
+    git "Default"
   }
 
   stages {
@@ -72,17 +73,9 @@
     stage('Install NodeJsScan') {
       steps {
         sh '''
-         mkdir -p $REPORT_DIR
-        docker run --rm -v $(pwd):/app ajinabraham/nodejsscan \
-        nodejsscan -d /app -o /app/$REPORT_DIR/nodejsscan-report.html || true
-        catch (err) {
-        echo "⚠️ NodeJsScan failed: ${err}"
-      }
-          // if ! command -v pip3 >/dev/null 2>&1; then
-          // apt-get update && apt-get install -y python3-pip
-          // fi
-          // pip3 install --upgrade pip
-          // pip3 install nodejsscan
+         
+        sudo docker run --rm -v /var/lib/jenkins/workspace/ci-dc-jenkins:/app nodejsscan:with-semgrep /app --html -o /app/reports/nodejsscan-report.html || true
+          
         '''
       }
     }
@@ -99,8 +92,8 @@
   steps {
     script {
       withAWS(region: "${AWS_REGION}", credentials: "${AWS_CREDENTIALS_ID}") {
-        s3Upload bucket: "${S3_BUCKET}", path: "builds/${BUILD_NUMBER}/", workingDir: "${DIST_DIR}"
-        s3Upload bucket: "${S3_BUCKET}", path: "reports/${BUILD_NUMBER}/", workingDir: "${REPORT_DIR}"
+        s3Upload bucket: "${S3_BUCKET}", path: "builds/${BUILD_NUMBER}/", workingDir: "${DIST_DIR}", includePathPattern: '**/*'
+        s3Upload bucket: "${S3_BUCKET}", path: "reports/${BUILD_NUMBER}/", workingDir: "${REPORT_DIR}", includePathPattern: '**/*'
       }
     }
   }
@@ -120,4 +113,4 @@
     }
   }
 }
- 
+  
