@@ -75,7 +75,7 @@
     stage('Install NodeJsScan') {
       steps {
         sh '''
-         
+         mkdir -p reports
         sudo docker run --rm -v /var/lib/jenkins/workspace/ci-dc-jenkins:/app nodejsscan:with-semgrep /app --html -o /app/reports/nodejsscan-report.html || true
           
         '''
