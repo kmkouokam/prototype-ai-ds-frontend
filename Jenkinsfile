@@ -1,8 +1,6 @@
-<<<<<<< HEAD
- pipeline {
-=======
+ 
   pipeline {
->>>>>>> 7fd915e4568c8bc49963c1fce25e63d6c68d949f
+ 
   agent any
 
   environment {
