@@ -105,7 +105,7 @@
 
   post {
     always {
-      archiveArtifacts artifacts: "${REPORT_DIR}/**", fingerprint: true
+      archiveArtifacts artifacts: "${env.REPORT_DIR}/**", fingerprint: true
     }
     success {
       echo '✅ Pipeline completed successfully.'
