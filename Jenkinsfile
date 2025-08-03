@@ -1,7 +1,7 @@
 // Slack notification helper
 def slackNotify(String status) {
   def message = "*${env.JOB_NAME}* build #${env.BUILD_NUMBER} - *${status}*\n${env.BUILD_URL}"
-  withCredentials([string(credentialsId: 'JenkinsNotifier', variable: 'SLACK_WEBHOOK')]) {
+  withCredentials([string(credentialsId: 'https://internship-rma1183.slack.com', variable: 'SLACK_WEBHOOK')]) {
     sh """
       curl -X POST -H 'Content-type: application/json' \\
       --data '{"text": "${message}"}' \\
