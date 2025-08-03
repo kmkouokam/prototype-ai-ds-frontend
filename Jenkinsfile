@@ -1,4 +1,17 @@
+def slackNotify(String status) {
+  def message = "*${env.JOB_NAME}* build #${env.BUILD_NUMBER} - *${status}*\n${env.BUILD_URL}"
+  withCredentials([string(credentialsId: 'slack-webhook-url', variable: 'SLACK_WEBHOOK')]) {
+    sh """
+      curl -X POST -H 'Content-type: application/json' \
+      --data '{"text": "${message}"}' \
+      $SLACK_WEBHOOK
+    """
+  }
+}
  
+
+
+
   pipeline {
  
   agent any
@@ -103,7 +116,7 @@
 
   }
 
-  stage('Notify Slack') {
+    stage('Notify Slack') {
   steps {
     sh '''
       curl -X POST -H 'Content-type: application/json' --data '{"text":"✅ Build #${BUILD_NUMBER} completed successfully!"}' https://hooks.slack.com/services/XXX/YYY/ZZZ
@@ -111,13 +124,13 @@
   }
 }
 
-
-  post {
+post {
     always {
       archiveArtifacts artifacts: "${env.REPORT_DIR}/**", fingerprint: true
     }
     success {
       echo '✅ Pipeline completed successfully.'
+      slackNotify('SUCCESS')
     }
     failure {
       echo '❌ Pipeline failed. Check logs.'
