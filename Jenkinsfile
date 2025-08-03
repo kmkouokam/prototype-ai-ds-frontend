@@ -103,7 +103,7 @@
 
   }
 
-stage('Notify Slack') {
+    stage('Notify Slack') {
   steps {
     sh '''
       curl -X POST -H 'Content-type: application/json' --data '{"text":"✅ Build #${BUILD_NUMBER} completed successfully!"}' https://hooks.slack.com/services/XXX/YYY/ZZZ
