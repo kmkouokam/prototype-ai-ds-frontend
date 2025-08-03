@@ -1,19 +1,16 @@
+// Slack notification helper
 def slackNotify(String status) {
   def message = "*${env.JOB_NAME}* build #${env.BUILD_NUMBER} - *${status}*\n${env.BUILD_URL}"
   withCredentials([string(credentialsId: 'slack-webhook-url', variable: 'SLACK_WEBHOOK')]) {
     sh """
-      curl -X POST -H 'Content-type: application/json' \
-      --data '{"text": "${message}"}' \
-      $SLACK_WEBHOOK
+      curl -X POST -H 'Content-type: application/json' \\
+      --data '{"text": "${message}"}' \\
+      \$SLACK_WEBHOOK
     """
   }
 }
- 
 
-
-
-  pipeline {
- 
+pipeline {
   agent any
 
   environment {
@@ -88,9 +85,8 @@ def slackNotify(String status) {
     stage('Install NodeJsScan') {
       steps {
         sh '''
-         mkdir -p reports
-        sudo docker run --rm -v /var/lib/jenkins/workspace/ci-dc-jenkins:/app nodejsscan:with-semgrep /app --html -o /app/reports/nodejsscan-report.html || true
-          
+          mkdir -p reports
+          sudo docker run --rm -v /var/lib/jenkins/workspace/ci-dc-jenkins:/app nodejsscan:with-semgrep /app --html -o /app/reports/nodejsscan-report.html || true
         '''
       }
     }
@@ -104,27 +100,27 @@ def slackNotify(String status) {
     }
 
     stage('Upload to S3') {
-  steps {
-    script {
-      withAWS(region: "${AWS_REGION}", credentials: "${AWS_CREDENTIALS_ID}") {
-        s3Upload bucket: "${S3_BUCKET}", path: "builds/${BUILD_NUMBER}/", workingDir: "${DIST_DIR}", includePathPattern: '**/*'
-        s3Upload bucket: "${S3_BUCKET}", path: "reports/${BUILD_NUMBER}/", workingDir: "${REPORT_DIR}", includePathPattern: '**/*'
+      steps {
+        script {
+          withAWS(region: "${AWS_REGION}", credentials: "${AWS_CREDENTIALS_ID}") {
+            s3Upload bucket: "${S3_BUCKET}", path: "builds/${BUILD_NUMBER}/", workingDir: "${DIST_DIR}", includePathPattern: '**/*'
+            s3Upload bucket: "${S3_BUCKET}", path: "reports/${BUILD_NUMBER}/", workingDir: "${REPORT_DIR}", includePathPattern: '**/*'
+          }
+        }
+      }
+    }
+
+    // ✅ Slack notification as a separate stage
+    stage('Notify Slack') {
+      steps {
+        script {
+          slackNotify("Pipeline Finished")
+        }
       }
     }
   }
-}
 
-  }
-
-    stage('Notify Slack') {
-  steps {
-    sh '''
-      curl -X POST -H 'Content-type: application/json' --data '{"text":"✅ Build #${BUILD_NUMBER} completed successfully!"}' https://hooks.slack.com/services/XXX/YYY/ZZZ
-    '''
-  }
-}
-
-post {
+  post {
     always {
       archiveArtifacts artifacts: "${env.REPORT_DIR}/**", fingerprint: true
     }
@@ -134,6 +130,7 @@ post {
     }
     failure {
       echo '❌ Pipeline failed. Check logs.'
+      slackNotify('FAILURE')
     }
   }
 }
